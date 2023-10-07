@@ -11,6 +11,7 @@ const app = express();
 // other import
 const connect = require("./db/connect");
 const authRouter = require("./routes/auth");
+const userRouter = require("./routes/user");
 // Apply middlewares
 app.use(cors);
 app.use(morgan("tiny"));
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routing
 app.use("/auth", authRouter);
+app.use("/user", userRouter);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
