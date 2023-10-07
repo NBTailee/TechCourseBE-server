@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 const saltRound = 10;
 
 const encrypt = (plainPassword) => {
@@ -42,7 +43,15 @@ const handleUser = {
         const hashPassword = userData.password;
         const isMatch = decrypt(password, hashPassword);
         if (isMatch) {
-          res.status(200).json("Login Successfully");
+          const accessToken = jwt.sign({
+              id: userData.id,
+              admin: userData.isAdmin
+            },
+            process.env.JWT_ACCESS_KEY,
+            {expiresIn: "30d" }
+          );
+          const {password, ...xuat} = userData._doc;
+          res.status(200).json({...xuat, accessToken});
         } else {
           res.status(500).json("Wrong username or password");
         }
